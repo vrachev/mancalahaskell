@@ -3,7 +3,7 @@ A Haskell Mancala Game
 
 Project By Vlad Rachev and Marc Eastman
 
-![](/Mancala.jpg?raw=true "Mancala")
+![](/mancala.jpg?raw=true "Mancala")
 
 
 Goals:
