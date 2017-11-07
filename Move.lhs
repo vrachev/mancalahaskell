@@ -19,11 +19,16 @@ replaceInList index val (x:xs) =
 	[x] ++ (replaceInList (index - 1) val xs)
 
 
-move :: Int -> Int -> [Int] -> [Int]
+move :: Int -> Int -> [Int] ->  (Int, [Int])
 move p pos lst = let marbles_at_pos = lst !! pos in 
 	let realIndex = (pos `mod` 14) in
 		let newList = addToList realIndex marbles_at_pos lst in
-			 ((take (realIndex - 1) newList) ++ [0] ++ (drop (realIndex+1) newList))
+			(if (p == 0)
+				then (if ((pos + marbles_at_pos) `mod` 14 == 0)
+					then (p, ((take (realIndex) newList) ++ [0] ++ (drop (realIndex+1) newList)))
+					else ( (p + 1) `mod` 2, ((take (realIndex) newList) ++ [0] ++ (drop (realIndex+1) newList))))
+				else ( (p + 1) `mod` 2, ((take (realIndex) newList) ++ [0] ++ (drop (realIndex+1) newList))))
+
 
 
 
