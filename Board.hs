@@ -1,10 +1,8 @@
 module Main where
 
 import BoardHelpers
+import Move
 import Control.Monad
---takes list of board  and prints it
-checkWin :: [Int] -> Bool
-checkWin board = True
 
 printBoard:: [Int] -> IO ()
 printBoard board = do
@@ -27,13 +25,12 @@ playGame :: [Int] -> IO ()
 playGame board = do
 	printBoard board
 	putStrLn "Player 1's Move! Enter a number to choose a pit!"
-	move <- getLine
---	board <- return board
---	when (checkWin board) return "Winner!"
+	daMove <- getLine
+	board <- return (move 0 (read daMove) board)
+--	checkwin
 	printBoard board
 	putStrLn "Player 2's Move! Enter a number to choose a pit!"
-	move <- getLine
-	putStrLn (show move)
+	daMove2 <- getLine
+	board <- return (move 1 (read daMove2) board)
+--checkWin	
 	playGame board
---	board <- return board
-	--if(checkWin board) then (return "Winner!") else (playGame board)
