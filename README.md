@@ -13,6 +13,6 @@ Update:
  * input numebr representing the bucket you want to select for your next move
 
 Goals:
-* Create a playable game between human or computer players, either through GUI or stdio
+* Create a playable game between human or computer players, either GUI using Javascript React
   * create a computer agent to play the game
 * Implement unit tests 
