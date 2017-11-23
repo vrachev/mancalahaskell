@@ -1,3 +1,4 @@
+--figure out how to do frontend with react or some other haskell ui library
 module Main where
 
 import BoardHelpers
@@ -22,11 +23,10 @@ playGame playerInt playerString board = do
       (board !! 2)++"|"++putIntoTwo (board !! 3)++"|"++putIntoTwo (board !! 4)++"|"++
         putIntoTwo (board !! 5)++"|"++putIntoTwo (board !! 6)++"|  |")
     putStrLn "-P1-1--2--3--4--5--6-----"
-    
-    
+
+
     putStr "Enter a number to choose a pit, player "
     putStrLn playerString
     daMove <- getLine
     (p,board) <- return (move playerInt (read daMove :: Int) board)
     playGame p (show p) board
-   
