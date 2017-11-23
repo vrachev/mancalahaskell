@@ -10,12 +10,16 @@ data Player =
 data Tile = Cup Player Int Int 
           | Mancala Player Int Int 
 
--- data NextPlayerTurn = NextPlayerTurn { player :: Player }
 
-type Board = [Tile]
+-- Player is the next Player to move
+-- [Tile] is the board 
+type Board = (Player, [Tile])
 
--- data Board = Board { next :: NextPlayerTurn
- --                  , cups :: List Cup }
+data Dimension = Int 
+
+-- startBoard :: Player -> Board
+-- startBoard p = [p, ()]
+
 
 
 isCupEmpty :: Tile -> Bool
