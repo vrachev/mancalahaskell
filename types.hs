@@ -51,6 +51,9 @@ marblesInTile (Mancala _ _ n) = n
 instance Show Player where
     show = playerName
 
+instance Eq Player where
+	p1 == p2 = playerName p1 == playerName p2
+
 instance Show Tile where
     show (Cup a b c d) = show c
     show (Mancala a b c) = show c
