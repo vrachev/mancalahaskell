@@ -4,6 +4,7 @@ import './index.css';
 import App from './App';
 import registerServiceWorker from './registerServiceWorker';
 
-const board = [4,4,4,4,4,4,4,4,4,4,4,4];
-ReactDOM.render(<App board = {board}/>, document.getElementById('root'));
+var board = [0,4,4,4,4,4,4,0,4,4,4,4,4,4];
+var player = 1;
+ReactDOM.render(<App board = {board} player = {player}/>, document.getElementById('root'));
 registerServiceWorker();
