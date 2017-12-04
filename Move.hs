@@ -12,7 +12,7 @@ import Types
 move :: Board -> Int -> Board 
 move (p, tiles) i 
     | 0 > i = error "invalid index, out of range"
-    | 0 == 1 = error "invalid index, called on mancala"
+    | 0 == i = error "invalid index, called on mancala"
     | 13 < i = error "invalid index, out of range"
     | 7 == i = error "invalid index, called on mancala"
     | otherwise = 
@@ -25,8 +25,43 @@ move (p, tiles) i
                    
 
 
+-- increments the next I cups by one
+-- [Tiles] : input tile list
+-- Int : startIndex - does not update this one, this is reset to 0 by calling function
+-- Int : marbles to distribute
+-- [Tiles] : output tile list
+updatePlusOne :: [Tile] -> Int -> Int -> [Tile]
+updatePlusOne tiles index 0 = tiles
+updatePlusOne tiles index marbles = 
+    let nextIndex = ((index + 1) `mod` 14) in
+        let currentTile = (tiles !! nextIndex)
+            marblesRemaining = (marbles - 1)
+            in 
+            let updatedTiles = (updateTile tiles nextIndex currentTile True)
+                in updatePlusOne updatedTiles nextIndex marblesRemaining
+
+
+-- updates boar with new marble counts
+-- Board : input board
+-- Int : index of cup chosen
+-- Board : output board
+updateBoard :: Board -> Int -> Board
+updateBoard (p, tiles) index = 
+    let marbles = marblesInTile (tiles !! index) in
+        let updatedTiles = updatePlusOne tiles index marbles in
+            let newListAndRestorigTile = updateTile updatedTiles index (tiles !! index) False in
+                (p, newListAndRestorigTile)
+
+
+-- updatePlayer :: Board -> Int -> Board
+
 -- moveCorrectOutput is the move method but with input guaranteed to be correct
 moveCorrectInput :: Board -> Int -> Board
 moveCorrectInput (p, tiles) i = 
     let (Cup p_c ind m i_o) = tiles !! i in
-        (p, tiles)
+        let updatedBoard = updateBoard (p, tiles) i in
+            updatedBoard
+
+
+
+
