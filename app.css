@@ -1,0 +1,51 @@
+body{
+  font-size: 24px;
+  color: purple;
+}
+.messagePanel{
+  margin: 1em auto;
+  justify-content: center;
+  display: flex;
+  font-size: 48px;
+}
+.board {
+  margin: 4em auto;
+  background: peru;
+  width: 75%;
+  height: 6em;
+  padding: 1em;
+  display: flex;
+}
+
+.home {
+  width: 5%;
+  border-radius: 40%;
+  font-size: 2em;
+  background: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.holes-section {
+  width: 90%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.holes-container {
+  display: flex;
+  justify-content: space-around;
+}
+
+.hole {
+  width: 1.4em;
+  height: 1.4em;
+  font-size: 2em;
+  border-radius: 100%;
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

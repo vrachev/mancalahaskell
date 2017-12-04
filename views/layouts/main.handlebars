@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Chat</title>
+    <style type="text/css">
+    body{
+      font-size: 24px;
+      color: purple;
+      }
+      .messagePanel{
+      margin: 1em auto;
+      justify-content: center;
+      display: flex;
+      font-size: 1em;
+      }
+      .board {
+      margin: 4em auto;
+      background: peru;
+      width: 75%;
+      height: 6em;
+      padding: 1em;
+      display: flex;
+      }
+
+      .home {
+      width: 5%;
+      border-radius: 40%;
+      font-size: 2em;
+      background: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      }
+
+      .holes-section {
+      width: 90%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      }
+
+      .holes-container {
+      display: flex;
+      justify-content: space-around;
+      }
+
+      .hole {
+      
+      width: 1.4em;
+      height: 1.4em;
+      font-size: 2em;
+      border-radius: 100%;
+      background: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      }
+
+    </style>
+</head>
+<body>
+    {{{body}}}
+    <script src="/socket.io/socket.io.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+	<script>
+	var socket = io();
+
+	$('.hole').on("click", function(){
+    //console.log($(this).prop("id"));
+		socket.emit('button click', $(this).prop("id"));
+		// return false;
+	});
+
+	socket.on('button click', function(msg){
+    var cur = $("#messages").text().match(/\d+/);
+    //console.log("current: " + cur);
+    //sends in player and choice and gets back player and board
+    $.post("/haskell", {player: cur, choice: msg}, function(data){
+      //emits int player
+        socket.emit('switch player', data.player);
+        //console.log(data.player)
+        $('#0').text(data.board[0]);
+        $('#1').text(data.board[1]);
+        $('#2').text(data.board[2]);
+        $('#3').text(data.board[3]);
+        $('#4').text(data.board[4]);
+        $('#5').text(data.board[5]);
+        $('#6').text(data.board[6]);
+        $('#7').text(data.board[7]);
+        $('#8').text(data.board[8]);
+        $('#9').text(data.board[9]);
+        $('#10').text(data.board[10]);
+        $('#11').text(data.board[11]);
+        $('#12').text(data.board[12]);
+        $('#13').text(data.board[13]);
+    })
+	});
+
+  socket.on('switch player', function(msg){
+    //msg/player is an int now
+    $("#messages").text(`Player ${msg}'s turn!!`);
+    if(msg === 2){
+      $('#1').prop("disabled",true);
+      $('#2').prop("disabled",true);
+      $('#3').prop("disabled",true);
+      $('#4').prop("disabled",true);
+      $('#5').prop("disabled",true);
+      $('#6').prop("disabled",true);
+      $('#8').prop("disabled",false);
+      $('#9').prop("disabled",false);
+      $('#10').prop("disabled",false);
+      $('#11').prop("disabled",false);
+      $('#12').prop("disabled",false);
+      $('#13').prop("disabled",false);
+    }
+    else{
+      $('#1').prop("disabled",false);
+      $('#2').prop("disabled",false);
+      $('#3').prop("disabled",false);
+      $('#4').prop("disabled",false);
+      $('#5').prop("disabled",false);
+      $('#6').prop("disabled",false);
+      $('#8').prop("disabled",true);
+      $('#9').prop("disabled",true);
+      $('#10').prop("disabled",true);
+      $('#11').prop("disabled",true);
+      $('#12').prop("disabled",true);
+      $('#13').prop("disabled",true);
+    }
+  })
+
+
+	</script>
+</body>
+</html>
