@@ -3,7 +3,8 @@ module Types where
 import qualified Data.List
 
 data Player = 
-    Player { playerName :: String }
+    Player { playerName :: String,
+             playerIndex :: Int}
 
 -- Cup Player IndexOnBoard MarblesInCup IndexOpposing
 -- Mancala Player IndexOnBoard MarblesInMancala 
@@ -48,9 +49,17 @@ updateMarbleCount :: Tile -> Tile
 updateMarbleCount (Cup p i marbles o)  = Cup p i (marbles + 1) o
 updateMarbleCount (Mancala p i marbles)  = Mancala p i (marbles + 1)
 
+incrementMarbleCountByNum :: Tile -> Int -> Tile
+incrementMarbleCountByNum (Mancala p i marbles) num = Mancala p i (marbles + num)
+incrementMarbleCountByNum (Cup p i marbles o) num = (Cup p i (marbles + num) o)
+
 resetToZero :: Tile -> Tile
 resetToZero (Cup p i marbles o) = Cup p i 0 o
 resetToZero (Mancala p i marbles) = Mancala p i 0 
+
+isThisPlayersCup :: Tile -> Player -> Bool
+isThisPlayersCup (Cup p _ _ _) p2 = if p == p2 then True else False
+isThisPlayersCup (Mancala _ _ _) _ = False
 
 marblesInTile :: Tile -> Int
 marblesInTile (Cup _ _ n _) = n
@@ -60,19 +69,14 @@ marblesInTile (Mancala _ _ n) = n
 -- [Tile] - input tiles
 -- Int - index to replace
 -- Tile - tile to replace
--- Bool - true if incrementing Tile, false if resetting to zero
+-- Tile - tile to replace with
 -- [Tile] - output tiles      
-updateTile :: [Tile] -> Int -> Tile -> Bool -> [Tile]
-updateTile tiles 0 t True = 
-    let updatedTile = updateMarbleCount t  in
-        let newTileList = ([updatedTile] ++ (drop 1 tiles)) in
+updateTile :: [Tile] -> Int -> Tile -> [Tile]
+updateTile tiles 0 newT = 
+    let newTileList = ([newT] ++ (drop 1 tiles)) in
         newTileList
-updateTile tiles 0 t False = 
-    let updatedTile = resetToZero t in
-        let newTileList = ([updatedTile] ++ (drop 1 tiles)) in
-        newTileList
-updateTile (x:xs) index t b = 
-    [x] ++ (updateTile xs (index - 1) t b)
+updateTile (x:xs) index b = 
+    [x] ++ (updateTile xs (index - 1) b)
        
 
 
@@ -81,7 +85,7 @@ instance Show Player where
     show = playerName
 
 instance Eq Player where
-    p1 == p2 = playerName p1 == playerName p2
+    p1 == p2 = playerIndex p1 == playerIndex p2
 
 instance Show Tile where
     show (Cup a b c d) = show c

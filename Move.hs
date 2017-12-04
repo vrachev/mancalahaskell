@@ -37,11 +37,11 @@ updatePlusOne tiles index marbles =
         let currentTile = (tiles !! nextIndex)
             marblesRemaining = (marbles - 1)
             in 
-            let updatedTiles = (updateTile tiles nextIndex currentTile True)
+            let updatedTiles = (updateTile tiles nextIndex (updateMarbleCount currentTile))
                 in updatePlusOne updatedTiles nextIndex marblesRemaining
 
 
--- updates boar with new marble counts
+-- updates board with new marble counts
 -- Board : input board
 -- Int : index of cup chosen
 -- Board : output board
@@ -49,11 +49,42 @@ updateBoard :: Board -> Int -> Board
 updateBoard (p, tiles) index = 
     let marbles = marblesInTile (tiles !! index) in
         let updatedTiles = updatePlusOne tiles index marbles in
-            let newListAndRestorigTile = updateTile updatedTiles index (tiles !! index) False in
+            let newListAndRestorigTile = updateTile updatedTiles index (resetToZero (tiles !! index)) in
                 (p, newListAndRestorigTile)
 
 
--- updatePlayer :: Board -> Int -> Board
+-- int : playerIndex 
+-- int : index of last cup
+didLastMarbleLandInMancala :: Int -> Int -> Bool
+didLastMarbleLandInMancala 0 0 = True
+didLastMarbleLandInMancala 1 7 = True
+didLastMarbleLandInMancala _ _ = False
+
+
+doWeTakeOpponentMarbles :: Board -> Int -> Bool
+doWeTakeOpponentMarbles (p, tiles) index =
+    let t = tiles !! index in
+        if (isThisPlayersCup t p == False) then False 
+            else if (isCupEmpty t == True) then True else False
+
+
+-- Int - index of tile where last marble went to 
+-- Int - marbles to increment tile by
+takeOpponentMarbles :: Board -> Int -> Int -> Board
+takeOpponentMarbles (p, tiles) i m = 
+    let t = (tiles !! i) in
+        let newT = incrementMarbleCountByNum t m in 
+            let newTileList = updateTile tiles i newT in 
+                (p, newTileList)
+
+
+-- Int - index of tile where last marble went to
+-- returnFinalBoardAndNextPlayer :: Board -> Int -> Board
+
+
+-- updatePlayer :: Board -> Int -> Board 
+-- updatePlayer (p, tiles) index 
+
 
 -- moveCorrectOutput is the move method but with input guaranteed to be correct
 moveCorrectInput :: Board -> Int -> Board
