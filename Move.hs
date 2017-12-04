@@ -56,8 +56,8 @@ updateBoard (p, tiles) index =
 -- int : playerIndex 
 -- int : index of last cup
 didLastMarbleLandInMancala :: Int -> Int -> Bool
-didLastMarbleLandInMancala 0 0 = True
-didLastMarbleLandInMancala 1 7 = True
+didLastMarbleLandInMancala 1 0 = True
+didLastMarbleLandInMancala 0 7 = True
 didLastMarbleLandInMancala _ _ = False
 
 
@@ -69,17 +69,26 @@ doWeTakeOpponentMarbles (p, tiles) index =
 
 
 -- Int - index of tile where last marble went to 
--- Int - marbles to increment tile by
-takeOpponentMarbles :: Board -> Int -> Int -> Board
-takeOpponentMarbles (p, tiles) i m = 
-    let t = (tiles !! i) in
-        let newT = incrementMarbleCountByNum t m in 
-            let newTileList = updateTile tiles i newT in 
-                (p, newTileList)
+ 
+takeOpponentMarblesAndUpdateBoard :: Board -> Int -> [Tile]
+takeOpponentMarblesAndUpdateBoard (p, tiles) i = 
+    let playerMancala = getPlayerMancala p tiles in
+        let currentTile = (tiles !! i) in
+            let (Cup p_c i m i_o) = currentTile in 
+                let tileToReset = (tiles !! i_o) in 
+                    let newT = incrementMarbleCountByNum playerMancala m in 
+                        let newTileList = updateTile tiles i newT in 
+                            let tileListWithReset = updateTile newTileList i_o (resetToZero tileToReset) in 
+                                tileListWithReset 
 
 
 -- Int - index of tile where last marble went to
--- returnFinalBoardAndNextPlayer :: Board -> Int -> Board
+returnFinalBoardAndNextPlayer :: Board -> Int -> Board
+returnFinalBoardAndNextPlayer (p, tiles) ind = 
+    if (didLastMarbleLandInMancala (playerIndex p) ind) == True then (p, tiles) else
+        if (doWeTakeOpponentMarbles (p, tiles) ind) == False then ((getNextPlayer p), tiles) else 
+            let finalTiles = takeOpponentMarblesAndUpdateBoard (p, tiles) ind in 
+                ((getNextPlayer p), finalTiles)
 
 
 -- updatePlayer :: Board -> Int -> Board 
@@ -91,8 +100,15 @@ moveCorrectInput :: Board -> Int -> Board
 moveCorrectInput (p, tiles) i = 
     let (Cup p_c ind m i_o) = tiles !! i in
         let updatedBoard = updateBoard (p, tiles) i in
-            updatedBoard
+            returnFinalBoardAndNextPlayer updatedBoard (getEndBucketIndex tiles i)
 
+
+-- retrieves index of the bucket where the last marble will fall
+-- Int - index of start bucket
+getEndBucketIndex :: [Tile] -> Int -> Int
+getEndBucketIndex tiles ind = 
+    let m = marblesInTile (tiles !! ind) in 
+        (ind + m) `mod` 14
 
 
 

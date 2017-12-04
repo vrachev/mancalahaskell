@@ -39,6 +39,14 @@ startBoard p1 p2 = (p1, [
     (Cup p2 13 4 1)
     ])
 
+initPlayers :: String -> String -> [Player]
+initPlayers s0 s1 = 
+    let p0 = Player s0 0 
+        p1 = Player s1 1 in [p0, p1]
+
+getPlayers :: [Player]
+getPlayers = initPlayers "player0" "player1"
+
 
 isCupEmpty :: Tile -> Bool
 isCupEmpty (Cup _ _ 0 _) = True
@@ -64,6 +72,13 @@ isThisPlayersCup (Mancala _ _ _) _ = False
 marblesInTile :: Tile -> Int
 marblesInTile (Cup _ _ n _) = n
 marblesInTile (Mancala _ _ n) = n 
+
+getNextPlayer :: Player -> Player
+getNextPlayer p = if ((playerIndex p) == 0) then (getPlayers !! 1) else (getPlayers !! 0)
+
+getPlayerMancala :: Player -> [Tile] -> Tile
+getPlayerMancala p tiles = if ((playerIndex p) == 0) then (tiles !! 7) else (tiles !! 0)
+
 
 -- method that replaces a bucket in the board with a new count of marbles
 -- [Tile] - input tiles
