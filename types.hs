@@ -21,23 +21,28 @@ type Board = (Player, [Tile])
 
 data Dimension = Dim Int 
 
+createBoard :: [Int] -> Player -> Player -> Board
+createBoard marbles p1 p2 = 
+    (p1, [
+        (Mancala p2 0 (marbles !! 0)),
+        (Cup p1 1 (marbles !! 1) 13),
+        (Cup p1 2 (marbles !! 2) 12),
+        (Cup p1 3 (marbles !! 3) 11),
+        (Cup p1 4 (marbles !! 4) 10),
+        (Cup p1 5 (marbles !! 5) 9),
+        (Cup p1 6 (marbles !! 6) 8),
+        (Mancala p1 0 (marbles !! 7)),
+        (Cup p1 8 (marbles !! 8) 6),
+        (Cup p1 9 (marbles !! 9) 5),
+        (Cup p1 10 (marbles !! 10) 4),
+        (Cup p1 11 (marbles !! 11) 3),
+        (Cup p1 12 (marbles !! 12) 2),
+        (Cup p1 13 (marbles !! 13) 1)
+        ])
+
+
 startBoard :: Player -> Player -> Board
-startBoard p1 p2 = (p1, [
-    (Mancala p2 0 0),
-    (Cup p1 1 4 13),
-    (Cup p1 2 4 12),
-    (Cup p1 3 4 11),
-    (Cup p1 4 4 10),
-    (Cup p1 5 4 9),
-    (Cup p1 6 4 8),
-    (Mancala p1 7 0),
-    (Cup p2 8 4 6),
-    (Cup p2 9 4 5),
-    (Cup p2 10 4 4),
-    (Cup p2 11 4 3),
-    (Cup p2 12 4 2),
-    (Cup p2 13 4 1)
-    ])
+startBoard p1 p2 = createBoard [0,4,4,4,4,4,4,0,4,4,4,4,4,4] p1 p2
 
 initPlayers :: String -> String -> [Player]
 initPlayers s0 s1 = 
@@ -45,7 +50,7 @@ initPlayers s0 s1 =
         p1 = Player s1 1 in [p0, p1]
 
 getPlayers :: [Player]
-getPlayers = initPlayers "player0" "player1"
+getPlayers = initPlayers "0" "1"
 
 
 isCupEmpty :: Tile -> Bool
@@ -94,6 +99,20 @@ updateTile (x:xs) index b =
     [x] ++ (updateTile xs (index - 1) b)
        
 
+isACup :: Tile -> Bool
+isACup (Cup _ _ _ _ ) = True
+isACup _ = False
+
+
+maybePlayer :: Maybe Player -> Int
+maybePlayer (Just p) = (playerIndex p)
+maybePlayer Nothing = 99
+
+
+tilesEqual :: [Tile] -> [Tile] -> Bool
+tilesEqual [] [] = True
+tilesEqual (x:xs) (y:ys) = 
+    if ((marblesInTile x) == (marblesInTile y)) then tilesEqual xs ys else False
 
 
 instance Show Player where
@@ -101,6 +120,7 @@ instance Show Player where
 
 instance Eq Player where
     p1 == p2 = playerIndex p1 == playerIndex p2
+
 
 instance Show Tile where
     show (Cup a b c d) = show c

@@ -22,7 +22,16 @@ move (p, tiles) i
             else if (m <= 0)
                 then error "invalid: zero marbles in cup"
                 else moveCorrectInput (p, tiles) i
-                   
+  
+finalBoardAndWinner :: Board -> (Board, Maybe Player)
+finalBoardAndWinner (p, tiles) = 
+    if (checkIfGameOver tiles == True) 
+        then ((p, tiles), Just (returnWinner tiles)) 
+        else ((p, tiles), Nothing)
+
+callFromMain :: Board -> Int -> (Board, Maybe Player)
+callFromMain b i = (finalBoardAndWinner (move b i))
+
 
 
 -- increments the next I cups by one
@@ -82,6 +91,25 @@ takeOpponentMarblesAndUpdateBoard (p, tiles) i =
                                 tileListWithReset 
 
 
+checkIfGameOver :: [Tile] -> Bool
+checkIfGameOver [] = True
+checkIfGameOver (x:xs) = 
+    if (isACup x == False) then checkIfGameOver xs
+        else if ((marblesInTile x) /= 0) then False
+            else checkIfGameOver xs
+
+-- returns winner
+-- only call if checkIfGameOver == true
+returnWinner :: [Tile] -> Player
+returnWinner tiles = 
+    let mancalaP1 = (tiles !! 0) 
+        mancalaP2 = (tiles !! 1) 
+        in if (marblesInTile mancalaP1) > (marblesInTile mancalaP2) 
+               then let (Mancala p _ _) = mancalaP1 in p
+               else let (Mancala p _ _) = mancalaP2 in p
+
+
+
 -- Int - index of tile where last marble went to
 returnFinalBoardAndNextPlayer :: Board -> Int -> Board
 returnFinalBoardAndNextPlayer (p, tiles) ind = 
@@ -100,8 +128,8 @@ moveCorrectInput :: Board -> Int -> Board
 moveCorrectInput (p, tiles) i = 
     let (Cup p_c ind m i_o) = tiles !! i in
         let updatedBoard = updateBoard (p, tiles) i in
-            returnFinalBoardAndNextPlayer updatedBoard (getEndBucketIndex tiles i)
-
+            returnFinalBoardAndNextPlayer updatedBoard (getEndBucketIndex tiles i) 
+            
 
 -- retrieves index of the bucket where the last marble will fall
 -- Int - index of start bucket
