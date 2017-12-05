@@ -33,12 +33,14 @@ app.post('/haskell', function (req, res) {
   board[7] = board[7].trim();
   var str = board.join(" ");
   var commands = `${player} ${choice} ${str}`;
-  console.log(`./HelloWorld.exe ${commands}`);
+  console.log(`./Main ${commands}`);
 
-
-  exec(`./HelloWorld.exe ${commands}`, function(err, data) {
+  exec(`./Main ${commands}`, function(err, data) {
     console.log(data);
-    var board = JSON.parse("[" + data.toString() + "]");
+    var board = JSON.parse("[" + data.substring(5, (data.length - 1)) + "]"); //array
+    var pWinner = parseInt(data.substring(0,1)); //string of a number
+    var pCurrent = parseInt(data.substring(3,4));
+    console.log(err);
     console.log(board);
     })
 

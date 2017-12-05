@@ -106,7 +106,7 @@ isACup _ = False
 
 maybePlayer :: Maybe Player -> Int
 maybePlayer (Just p) = (playerIndex p)
-maybePlayer Nothing = 99
+maybePlayer Nothing = 9
 
 
 tilesEqual :: [Tile] -> [Tile] -> Bool
