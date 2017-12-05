@@ -1,10 +1,11 @@
 {
-  "name": "test",
+  "name": "mancala-haskell",
   "version": "1.0.0",
-  "description": "",
+  "description": "Game based in node.js utilizing websockets and haskell",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
   },
   "keywords": [],
   "author": "",

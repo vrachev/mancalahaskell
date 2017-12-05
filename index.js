@@ -22,14 +22,28 @@ randomArray = (length, max) => [...new Array(length)]
 app.get('/', function(req, res) {
     res.render('board');
 });
+
 app.post('/haskell', function (req, res) {
-  //console.log(req);
-  exec('./HelloWorld.exe', function(err, data) {
-      console.log(data.toString())
+  var body = req.body;
+  var choice = body['choice'];
+  var player = body['player[]'];
+  var board = body['board[]'];
+  //body parser added whitespace
+  board[0] = board[0].trim();
+  board[7] = board[7].trim();
+  var str = board.join(" ");
+  var commands = `${player} ${choice} ${str}`;
+  console.log(`./HelloWorld.exe ${commands}`);
+
+
+  exec(`./HelloWorld.exe ${commands}`, function(err, data) {
+    console.log(data);
+    var board = JSON.parse("[" + data.toString() + "]");
+    console.log(board);
     })
-    //this post method has the latest info
-    //player isnt cur, player is what you get back from exe
-  res.send({player: Math.round(Math.random()*2)+1, board:randomArray(14,10)})
+
+    res.send({board: board.splice(0,13), player: board[14]+1,winner: board[15]});
+  // res.send({player: Math.round(Math.random()*2)+1, board:randomArray(14,10)});
 })
 
 io.on('connection', function(socket) {
@@ -39,6 +53,9 @@ io.on('connection', function(socket) {
     });
     socket.on('switch player', function(msg) {
       io.emit('switch player', msg);
+    });
+    socket.on('restart', function(msg) {
+      io.emit('restart', msg);
     });
 });
 

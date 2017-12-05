@@ -46,7 +46,7 @@
       }
 
       .hole {
-      
+
       width: 1.4em;
       height: 1.4em;
       font-size: 2em;
@@ -64,41 +64,87 @@
     <script src="/socket.io/socket.io.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
 	<script>
+  //event handlers (Jquery)
 	var socket = io();
-
+  $('#restart').on("click",function(){
+    socket.emit('restart', $(this).prop("id"));
+  })
 	$('.hole').on("click", function(){
     //console.log($(this).prop("id"));
 		socket.emit('button click', $(this).prop("id"));
 		// return false;
 	});
 
+  getBoard = () =>{
+     return [$('#0').text(),$('#1').text(),$('#2').text(),$('#3').text(),
+     $('#4').text(),$('#5').text(),$('#6').text(),$('#7').text(),$('#8').text(),
+     $('#9').text(),$('#10').text(),$('#11').text(),$('#12').text(),$('#13').text()];
+  }
+  switchText = (data)=>{
+    var winner = data.winner;
+    var player = data.player;
+    if(winner === 1){
+      player = 3;
+    }
+    if(winner === 2){
+      player = 4;
+    }
+    socket.emit('switch player', player);
+    //console.log(data.player)
+    $('#0').text(data.board[0]);
+    $('#1').text(data.board[1]);
+    $('#2').text(data.board[2]);
+    $('#3').text(data.board[3]);
+    $('#4').text(data.board[4]);
+    $('#5').text(data.board[5]);
+    $('#6').text(data.board[6]);
+    $('#7').text(data.board[7]);
+    $('#8').text(data.board[8]);
+    $('#9').text(data.board[9]);
+    $('#10').text(data.board[10]);
+    $('#11').text(data.board[11]);
+    $('#12').text(data.board[12]);
+    $('#13').text(data.board[13]);
+    if(data.winner === 1){
+      $("#messages").text(`Player 1 wins!`);
+    }
+    if(data.winner === 2){
+      $("#messages").text(`Player 2 wins!`);
+    }
+  }
+
+  socket.on('restart',function(msg){
+    switchText({player: 1,board: [4,4,4,4,4,4,4,4,4,4,4,4,4,4],winner:-1});
+  });
+
 	socket.on('button click', function(msg){
+    //get player from string at top
     var cur = $("#messages").text().match(/\d+/);
-    //console.log("current: " + cur);
+    var board = getBoard();
     //sends in player and choice and gets back player and board
-    $.post("/haskell", {player: cur, choice: msg}, function(data){
-      //emits int player
-        socket.emit('switch player', data.player);
-        //console.log(data.player)
-        $('#0').text(data.board[0]);
-        $('#1').text(data.board[1]);
-        $('#2').text(data.board[2]);
-        $('#3').text(data.board[3]);
-        $('#4').text(data.board[4]);
-        $('#5').text(data.board[5]);
-        $('#6').text(data.board[6]);
-        $('#7').text(data.board[7]);
-        $('#8').text(data.board[8]);
-        $('#9').text(data.board[9]);
-        $('#10').text(data.board[10]);
-        $('#11').text(data.board[11]);
-        $('#12').text(data.board[12]);
-        $('#13').text(data.board[13]);
+    $.post("/haskell", {player: cur, choice: msg, board: board}, function(data){
+      switchText(data);
     })
 	});
 
   socket.on('switch player', function(msg){
     //msg/player is an int now
+    if(msg > 2){
+      $("#messages").text(`PLAYER ${msg} WINS!!`);
+      $('#1').prop("disabled",true);
+      $('#2').prop("disabled",true);
+      $('#3').prop("disabled",true);
+      $('#4').prop("disabled",true);
+      $('#5').prop("disabled",true);
+      $('#6').prop("disabled",true);
+      $('#8').prop("disabled",true);
+      $('#9').prop("disabled",true);
+      $('#10').prop("disabled",true);
+      $('#11').prop("disabled",true);
+      $('#12').prop("disabled",true);
+      $('#13').prop("disabled",true);
+      return;
+    }
     $("#messages").text(`Player ${msg}'s turn!!`);
     if(msg === 2){
       $('#1').prop("disabled",true);
