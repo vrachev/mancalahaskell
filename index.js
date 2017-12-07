@@ -66,5 +66,5 @@ io.on('connection', function(socket) {
 });
 
 http.listen(3000, function() {
-    console.log('Example app listening on port 3000!');
+    console.log('Mancala app listening on port 3000!');
 });
