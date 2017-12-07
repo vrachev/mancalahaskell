@@ -1,6 +1,6 @@
 {
   "name": "mancala-haskell",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Game based in node.js utilizing websockets and haskell",
   "main": "index.js",
   "scripts": {
@@ -8,14 +8,12 @@
     "start": "node index.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "Vlad Rachev and Marc Eastman",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.16.1",
-    "dotenv": "^4.0.0",
     "express": "^4.14.1",
     "express-handlebars": "^3.0.0",
-    "mongoose": "^4.9.5",
     "socket.io": "^1.7.3"
   }
 }

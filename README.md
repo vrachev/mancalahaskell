@@ -5,16 +5,15 @@ Project By Vlad Rachev and Marc Eastman
 
 ![](/mancala.jpg?raw=true "Mancala")
 
+Installation:
+ * npm install mancalahaskell
+ * npm start
 
-Update:
- * can run simple game:
- * run in directory: ghc --make 
- * ./Board
- * input numebr representing the bucket you want to select for your next move
+Runs a mancala game for 2 human players.
+ * uses node.js to run haskell executable
+ * bottom/right is player 1, top/left is player 2
 
-Goals:
-* Create a playable game between human or computer players, GUI using Javascript React
-  * create two computer agents to play the game
-   * one agent making random moves
-   * one agent making smarter moves
-* Implement unit tests 
+Rules
+ * If you land in your own mancala (side hole) you go again
+ * If you land in an empty hole on your side, steal opponent's marbles
+ * When all marbles are gone from the holes, whoever has more wins
