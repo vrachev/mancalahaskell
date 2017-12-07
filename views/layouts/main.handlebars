@@ -114,7 +114,7 @@
   }
 
   socket.on('restart',function(msg){
-    switchText({player: 1,board: [4,4,4,4,4,4,4,4,4,4,4,4,4,4],winner:-1});
+    switchText({player: 1,board: [0,4,4,4,4,4,4,0,4,4,4,4,4,4],winner:-1});
   });
 
 	socket.on('button click', function(msg){
