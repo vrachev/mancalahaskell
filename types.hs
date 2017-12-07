@@ -31,7 +31,7 @@ createBoard marbles p1 p2 =
         (Cup p1 4 (marbles !! 4) 10),
         (Cup p1 5 (marbles !! 5) 9),
         (Cup p1 6 (marbles !! 6) 8),
-        (Mancala p1 0 (marbles !! 7)),
+        (Mancala p1 7 (marbles !! 7)),
         (Cup p1 8 (marbles !! 8) 6),
         (Cup p1 9 (marbles !! 9) 5),
         (Cup p1 10 (marbles !! 10) 4),

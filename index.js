@@ -34,9 +34,9 @@ app.post('/haskell', function (req, res) {
   board[7] = board[7].trim();
   var str = board.join(" ");
   var commands = `${player} ${choice} ${str}`;
-  console.log(`./Main ${commands}`);
+  console.log(`Main ${commands}`);
 
-  exec(`Main.exe ${commands}`, function(err, data) {
+  exec(`~/Main.exe ${commands}`, function(err, data) {
     console.log(data);
     var board = JSON.parse("[" + data.substring(5, (data.length - 1)) + "]")[0]; //array
     var pWinner = parseInt(data.substring(0,1)); //string of a number

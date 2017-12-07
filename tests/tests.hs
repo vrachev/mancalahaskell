@@ -17,7 +17,7 @@ boardArraysP2 = [[0,4,4,4,4,4,4,0,4,4,4,4,4,4], -- check valid/invalid moves on 
                [4,0,0,0,0,0,0,4,0,0,0,0,0,1], -- p2 has one move left, everything else should error, p2 wins after
                [4,0,0,0,0,0,0,4,0,0,0,0,2,1], -- p2 moves, after this p1 has no moves so it should default back to p2
                [0,4,4,4,4,4,4,0,4,4,4,4,4,4], -- p2 moves, lands in own mancala, goes again (move b 10)
-               [0,4,4,4,4,4,4,0,4,4,4,4,4,4]] -- p2 moves, lands in own cup with 0 marbles, reaps opposing cup, p1 goes              
+               [0,4,4,4,4,4,0,0,4,4,4,4,4,4]] -- p2 moves, lands in own cup with 0 marbles, reaps opposing cup, p1 goes              
 
 
 -- boards with it being P2's turn

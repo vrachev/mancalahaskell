@@ -1,6 +1,7 @@
 module Move where
 
 import Types
+import Debug.Trace
 
 
 -- create fun: anyMovesLeft that checks all cups for remaining marbles
@@ -11,17 +12,21 @@ import Types
 -- i is the index of the cup from which a player wants to move marbles
 move :: Board -> Int -> Board
 move (p, tiles) i
-    | 0 > i = error "invalid index, out of range"
-    | 0 == i = error "invalid index, called on mancala"
-    | 13 < i = error "invalid index, out of range"
-    | 7 == i = error "invalid index, called on mancala"
+    | 0 > i = returnSameBoard (p, tiles)
+    | 0 == i = returnSameBoard (p, tiles)
+    | 13 < i = returnSameBoard (p, tiles)
+    | 7 == i = returnSameBoard (p, tiles)
     | otherwise =
         let (Cup p_c ind m i_o) = tiles !! i in
         if (p_c /= p)
-            then error "invalid: selected opponent's cup"
+            then returnSameBoard (p, tiles)
             else if (m <= 0)
-                then error "invalid: zero marbles in cup"
+                then returnSameBoard (p, tiles)
                 else moveCorrectInput (p, tiles) i
+
+
+returnSameBoard :: Board -> Board 
+returnSameBoard b = b
 
 finalBoardAndWinner :: Board -> (Board, Maybe Player)
 finalBoardAndWinner (p, tiles) =
@@ -72,9 +77,12 @@ didLastMarbleLandInMancala _ _ = False
 
 doWeTakeOpponentMarbles :: Board -> Int -> Bool
 doWeTakeOpponentMarbles (p, tiles) index =
-    let t = tiles !! index in
-        if (isThisPlayersCup t p == False) then False
-            else if (isCupEmpty t == True) then True else False
+    let (Cup p_c i m i_o) = tiles !! index in
+        trace ("doWeTakeOppMarb ind: " ++ show index ++ "  " ++ show p_c)
+        ((if (isThisPlayersCup (Cup p_c i m i_o) p == False) then False
+            else if (isCupEmpty (Cup p_c i m i_o) == True) then True else False))
+
+
 
 
 -- Int - index of tile where last marble went to
@@ -82,14 +90,18 @@ doWeTakeOpponentMarbles (p, tiles) index =
 takeOpponentMarblesAndUpdateBoard :: Board -> Int -> [Tile]
 takeOpponentMarblesAndUpdateBoard (p, tiles) i =
     let playerMancala = getPlayerMancala p tiles in
-        let currentTile = (tiles !! i) in
-            let (Cup p_c i_cup m i_o) = currentTile in
-                let (Mancala p_c i_mancala m_mancala) = playerMancala in
-                    let tileToReset = (tiles !! i_o) in
-                        let newT = incrementMarbleCountByNum playerMancala m in
-                            let newTileList = updateTile tiles i_mancala newT in
-                                let tileListWithReset = updateTile newTileList i_o (resetToZero tileToReset) in
-                                    tileListWithReset
+        trace ("takeOpponent board: " ++ show (p, tiles))
+        (let currentTile = (tiles !! i) in
+            (trace "hmm")
+            (let (Mancala p_m i_mancala m_mancala) = playerMancala in
+                let (Cup p1 i1 m1 i_o ) = (tiles !! i) in
+                    let (Cup p2 i2 m2 i_o2) = (tiles !! i_o) in
+                        let newMancala = incrementMarbleCountByNum playerMancala m2 in
+                            trace ("manca_p: " ++ show p)
+                            (let newTileList = updateTile tiles i_mancala newMancala in
+                                let newTileList1 = updateTile newTileList i2 (Cup p2 i2 0 i_o2) in 
+                                    trace ("takeOpponent finalboard: " ++ show (p, newTileList1)) (newTileList1))))
+                                
 
 
 checkIfGameOver :: [Tile] -> Bool
@@ -115,9 +127,9 @@ returnWinner tiles =
 -- Board - startingBoard (to check if take over should happen)
 -- Int - index of tile where last marble went to
 returnFinalBoardAndNextPlayer :: Board -> Board -> Int -> Board
-returnFinalBoardAndNextPlayer (p, tiles) (_, tilesNext) ind =
+returnFinalBoardAndNextPlayer (p, tiles) (p_before, tiles_before) ind =
     if (didLastMarbleLandInMancala (playerIndex p) ind) == True then (p, tiles) else
-        if (doWeTakeOpponentMarbles (p, tilesNext) ind) == False then ((getNextPlayer p), tiles) else
+        if (doWeTakeOpponentMarbles (p_before, tiles_before) ind) == False then ((getNextPlayer p), tiles) else
             let finalTiles = (takeOpponentMarblesAndUpdateBoard (p, tiles) ind) in
                 ((getNextPlayer p), finalTiles)
 
